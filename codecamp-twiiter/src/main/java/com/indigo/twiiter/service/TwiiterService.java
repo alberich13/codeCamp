@@ -64,18 +64,21 @@ public class TwiiterService {
 	}
 	
 	private List<User> getFollowersOfUser(String userName) {
+		PagableResponseList<User> users = null;
+		List<User> followers = new ArrayList<>();
+		long count = -1;
 		try {
-			PagableResponseList<User> friendList = twitter.getFollowersList(userName, -1);
-			int sizeoffreindlist = friendList.size();
-			List<User> userList = new ArrayList<>();
-			for (int i = 0; i < sizeoffreindlist; i++) {
-				userList.add(friendList.get(i));
-			}
-			return userList;
+			do {
+				users = twitter.getFollowersList(userName, count);
+				for(User user :users) {
+					followers.add(user);
+				}
+			} while((count = users.getNextCursor()) != 0);
 		} catch (TwitterException e) {
-			log.error(e.getLocalizedMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return null;
+		return followers;
 	}
 	
 	private List<User> findDuplicates(List<User> listOne, List<User> listTwo) {
