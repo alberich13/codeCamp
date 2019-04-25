@@ -7,7 +7,7 @@ import twitter4j.Twitter;
 public class TwiiterService {
 	
 	@Autowired
-	Twitter twitter;
+	private Twitter twitter;
 	
 	public List<String> getUserFollowers(String userName){
 		return null;
