@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.indigo.twiiter.TwiiterConfig;
 import com.indigo.twiiter.service.TwiiterService;
 import lombok.extern.slf4j.Slf4j;
+import twitter4j.PagableResponseList;
+import twitter4j.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,6 +28,12 @@ public class TwiiterTest {
 	@Test
 	public void sendSaveJmsList() throws InterruptedException {
 		List<String> userFollowerList = twiiterService.printTest();
+		userFollowerList.forEach(log::info);
+	}
+	
+	@Test
+	public void getingFollowersByUser() throws InterruptedException {
+		List<String> userFollowerList = twiiterService.getUserFollowers("alemanuchau");
 		userFollowerList.forEach(log::info);
 	}
 }
