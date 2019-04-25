@@ -43,7 +43,7 @@ public class TwiiterService {
 			do {
 				users = twitter.getFollowersList(userName, count);
 				for(User user :users) {
-					followers.add(user.getName());
+					followers.add(user.getScreenName());
 				}
 			} while((count = users.getNextCursor()) != 0);
 		} catch (TwitterException e) {
