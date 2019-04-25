@@ -67,14 +67,23 @@ public class TwiiterService {
 		List<User> listFollowersUserA = this.getReationsOfUser(userNameA, TwiiterService.FOLLOWERS);
 		List<User> listFollowersUserB = this.getReationsOfUser(userNameB, TwiiterService.FOLLOWERS);
 		List<User> duplicates = this.findDuplicates(listFollowersUserA, listFollowersUserB);
-		return duplicates.stream().map(user-> user.getName()).collect(Collectors.toList());
+		return duplicates.stream().map(user-> user.getScreenName()).collect(Collectors.toList());
 	}
 	
 	public List<String> getCommonFriends(String userNameA, String userNameB) {
-		List<User> listFollowersUserA = this.getReationsOfUser(userNameA, TwiiterService.FRIENDS);
-		List<User> listFollowersUserB = this.getReationsOfUser(userNameB, TwiiterService.FRIENDS);
-		List<User> duplicates = this.findDuplicates(listFollowersUserA, listFollowersUserB);
-		return duplicates.stream().map(user-> user.getName()).collect(Collectors.toList());
+		List<String> commonFollowers = this.getCommonFollowers(userNameA, userNameB);
+		List<String> commonFriends = new ArrayList<>();
+		for (String follower : commonFollowers) {
+			if (isXFollowerOfY(userNameA, follower) && isXFollowerOfY(userNameB, follower))
+				commonFriends.add(follower);
+		}
+		return commonFriends;
+	}
+	
+	private boolean isXFollowerOfY(String userNameX, String userNameY) {
+		List<User> followersOfY = this.getReationsOfUser(userNameY, TwiiterService.FOLLOWERS);
+		List<String> followersOfXOnString = followersOfY.stream().map(follower -> follower.getName()).collect(Collectors.toList());
+		return followersOfXOnString.contains(userNameX);
 	}
 	
 	private List<User> getReationsOfUser(String userName, int typeOfRelationship) {
