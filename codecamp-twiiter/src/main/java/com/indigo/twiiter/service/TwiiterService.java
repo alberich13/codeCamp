@@ -36,7 +36,7 @@ public class TwiiterService {
 		return null;
 	}
 	
-	public List<String> getCommonFriends(List<String> userNameList){
+	public List<String> getCommonFriends(String userNameA, String userNameB) {
 		return null;
 	}
 }
