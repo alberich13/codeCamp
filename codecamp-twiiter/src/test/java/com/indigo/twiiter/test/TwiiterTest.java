@@ -25,7 +25,7 @@ public class TwiiterTest {
 	
 	@Test
 	public void sendSaveJmsList() throws InterruptedException {
-		List<String> userFollowerList = twiiterService.getUserFollowers("Aaron");
+		List<String> userFollowerList = twiiterService.printTest();
 		userFollowerList.forEach(log::info);
 	}
 }
