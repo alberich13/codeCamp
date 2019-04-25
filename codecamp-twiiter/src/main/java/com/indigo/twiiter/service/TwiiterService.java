@@ -82,7 +82,7 @@ public class TwiiterService {
 	
 	private boolean isXFollowerOfY(String userNameX, String userNameY) {
 		List<User> followersOfY = this.getReationsOfUser(userNameY, TwiiterService.FOLLOWERS);
-		List<String> followersOfXOnString = followersOfY.stream().map(follower -> follower.getName()).collect(Collectors.toList());
+		List<String> followersOfXOnString = followersOfY.stream().map(follower -> follower.getScreenName()).collect(Collectors.toList());
 		return followersOfXOnString.contains(userNameX);
 	}
 	
