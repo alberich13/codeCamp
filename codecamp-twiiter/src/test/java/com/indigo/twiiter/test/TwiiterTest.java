@@ -2,6 +2,7 @@ package com.indigo.twiiter.test;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class TwiiterTest {
 	private TwiiterService twiiterService;
 	
 	@Test
+	@Ignore
 	public void sendSaveJmsList() throws InterruptedException {
 		List<String> userFollowerList = twiiterService.printTest();
 		userFollowerList.forEach(log::info);
@@ -33,7 +35,11 @@ public class TwiiterTest {
 	
 	@Test
 	public void check() throws InterruptedException {
-		twiiterService.getCommonFriends("XE1JEG", "alberichXIII");
+		log.info("------------------Test of commons followers------------------");
+		twiiterService.getCommonFollowers("XE1JEG", "alberichXIII").forEach(log::info);
+
+		log.info("------------------Test of commons friends------------------");
+		twiiterService.getCommonFriends("XE1JEG", "alberichXIII").forEach(log::info);		
 	}
 
 	public void getingFollowersByUser() throws InterruptedException {

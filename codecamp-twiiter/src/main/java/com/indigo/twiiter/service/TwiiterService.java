@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,12 @@ public class TwiiterService {
 	
 	@Autowired
 	private Twitter twitter;
+	
+	public static int FOLLOWERS = 1;
+	public static int FRIENDS = 2;
+	
+	@Value("${app.twitter.api.unlimitedapicalls}")
+	private boolean unlimited_api_calls;
 	
 	public List<String> printTest(){
 		try {
@@ -56,29 +63,41 @@ public class TwiiterService {
 		return followers;
 	}
 	
-	public List<String> getCommonFriends(String userNameA, String userNameB) {
-		List<User> listFollowersUserA = this.getFollowersOfUser(userNameA);
-		List<User> listFollowersUserB = this.getFollowersOfUser(userNameB);
+	public List<String> getCommonFollowers(String userNameA, String userNameB) {
+		List<User> listFollowersUserA = this.getReationsOfUser(userNameA, TwiiterService.FOLLOWERS);
+		List<User> listFollowersUserB = this.getReationsOfUser(userNameB, TwiiterService.FOLLOWERS);
 		List<User> duplicates = this.findDuplicates(listFollowersUserA, listFollowersUserB);
 		return duplicates.stream().map(user-> user.getName()).collect(Collectors.toList());
 	}
 	
-	private List<User> getFollowersOfUser(String userName) {
+	public List<String> getCommonFriends(String userNameA, String userNameB) {
+		List<User> listFollowersUserA = this.getReationsOfUser(userNameA, TwiiterService.FRIENDS);
+		List<User> listFollowersUserB = this.getReationsOfUser(userNameB, TwiiterService.FRIENDS);
+		List<User> duplicates = this.findDuplicates(listFollowersUserA, listFollowersUserB);
+		return duplicates.stream().map(user-> user.getName()).collect(Collectors.toList());
+	}
+	
+	private List<User> getReationsOfUser(String userName, int typeOfRelationship) {
 		PagableResponseList<User> users = null;
-		List<User> followers = new ArrayList<>();
+		List<User> relationed = new ArrayList<>();
 		long count = -1;
 		try {
 			do {
-				users = twitter.getFollowersList(userName, count);
-				for(User user :users) {
-					followers.add(user);
+				if (typeOfRelationship == TwiiterService.FOLLOWERS)
+					users = twitter.getFollowersList(userName, count);
+				if (typeOfRelationship == TwiiterService.FRIENDS)
+					users = twitter.getFriendsList(userName, count);
+				for (User user : users) {
+					relationed.add(user);
 				}
-			} while((count = users.getNextCursor()) != 0);
+				if (this.unlimited_api_calls == false)
+					break;
+			} while ((count = users.getNextCursor()) != 0);
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return followers;
+		return relationed;
 	}
 	
 	private List<User> findDuplicates(List<User> listOne, List<User> listTwo) {
