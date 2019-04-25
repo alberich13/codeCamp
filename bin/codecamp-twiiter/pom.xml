@@ -3,4 +3,8 @@
   <groupId>com.indigo</groupId>
   <artifactId>codecamp-twiiter</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  
+  <dependencies>
+  
+  </dependencies>
 </project>
